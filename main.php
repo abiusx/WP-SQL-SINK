@@ -31,11 +31,8 @@ function is_plugin($file)
 	return plugin_name($file)!==null;
 }
 
-$argv[1]="extract";
-$argv[2]="wordpress-plugined";
-$argc=3;
 $usage="Usage: ".basename($argv[0])." install|uninstall|extract wordpress_folder\n".
-		"		extract wordpress_folder outfile.txt\n".
+		"		extract wordpress_folder\n".
 		"		install wordpress_folder\n".
 		"		uninstall wordpress_folder\n";
 if (!isset($argc) or $argc<3)
