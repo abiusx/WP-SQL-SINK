@@ -64,8 +64,15 @@ class SinkInstaller extends PHPParser_NodeVisitorAbstract
                 echo PHP_EOL;
             else
                 echo ".";
-            $syntax_tree = $parser->parse(file_get_contents($file));
-            self::$changed=false;
+            try {
+                $syntax_tree = $parser->parse(file_get_contents($file));
+            }
+            catch (PHPParser_Error $e)
+            {
+                echo PHP_EOL."ERROR: Unable to parse {$file}: ".$e->getMessage().PHP_EOL;
+                continue;
+            }
+                    self::$changed=false;
             $filtered = $traverser->traverse($syntax_tree);
             if (self::$changed)
             {
