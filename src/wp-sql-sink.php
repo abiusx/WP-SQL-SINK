@@ -27,7 +27,7 @@ class PDO_ extends PDO
         $parent = $reflector->getParentClass();
         $method = $parent->getMethod('query');
         return $method->invokeArgs($this, $args);
-      }
+    }
 }
 class mysqli_ extends mysqli
 {
@@ -66,27 +66,27 @@ function mysql_query_($query=null)
 	sink_handler($query);
 	return call_user_func_array("mysql_query", $args);
 }
-function mysqli_query_($link=null,$query=null);
+function mysqli_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
-	return call_user_func_array("mysql_query", $args);
+	return call_user_func_array("mysqli_query", $args);
 }
-function mysqli_real_query_($link=null,$query=null);
+function mysqli_real_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
-	return call_user_func_array("mysql_query", $args);
+	return call_user_func_array("mysqli_real_query", $args);
 }
-function mysqli_multi_query_($link=null,$query=null);
+function mysqli_multi_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
-	return call_user_func_array("mysql_query", $args);
+	return call_user_func_array("mysqli_multi_query", $args);
 }
-function mysql_db_query_($dbname=null,$query=null);
+function mysql_db_query_($dbname=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
-	return call_user_func_array("mysql_query", $args);
+	return call_user_func_array("mysql_db_query", $args);
 }
