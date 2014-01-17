@@ -13,9 +13,9 @@ if (count($changed))
     	unlink($wpdir."/wp-sql-sink.php");
     else
     	echo "Warning: sink wrappers were not properly installed!".PHP_EOL;
-    $indexCode=file_get_contents($wpdir."/index.php");
+    $indexCode=file_get_contents($wpdir."/wp-config.php");
     $indexNewCode=str_replace("require_once __DIR__.'/wp-sql-sink.php';\n", "", $indexCode);
-    file_put_contents($wpdir."/index.php", $indexNewCode);
+    file_put_contents($wpdir."/wp-config.php", $indexNewCode);
 
     foreach ($changed as $c)
         echo "'{$c}' was overwritten.".PHP_EOL;

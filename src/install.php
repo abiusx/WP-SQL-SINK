@@ -9,7 +9,7 @@ $changed=SinkInstaller::process($wpdir);
 if (count($changed))
 {
     file_put_contents($wpdir."/wp-sql-sink.php", file_get_contents(__DIR__."/wp-sql-sink.php"));
-    file_put_contents($wpdir."/index.php", "<?"."php\nrequire_once __DIR__.'/wp-sql-sink.php';\n".substr(file_get_contents($wpdir."/index.php"),6));
+    file_put_contents($wpdir."/wp-config.php", "<?"."php\nrequire_once __DIR__.'/wp-sql-sink.php';\n".substr(file_get_contents($wpdir."/wp-config.php"),6));
 
     foreach ($changed as $c)
     {

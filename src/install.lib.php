@@ -76,6 +76,7 @@ class SinkInstaller extends PHPParser_NodeVisitorAbstract
             $filtered = $traverser->traverse($syntax_tree);
             if (self::$changed)
             {
+                #FIXME: preserve top of file comments, Wordpress can not function without them
                 $newCode = '<?php ' . $prettyPrinter->prettyPrint($filtered);
                 file_put_contents($file, $newCode);   
                 $changes[]=$file;
