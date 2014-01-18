@@ -1,8 +1,5 @@
 <?php
 require_once __DIR__."/php-parser/lib/bootstrap.php";
-// $parser = new PHPParser_Parser(new PHPParser_Lexer);	
-// print_r($parser->parse(file_get_contents("sample_code.php")));
-// die();
 function getAllPhpFiles($Path)
 {
 	$Directory = new RecursiveDirectoryIterator($Path);

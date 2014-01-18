@@ -45,7 +45,21 @@ class SinkInstaller extends PHPParser_NodeVisitorAbstract
             }
         }
     }
-
+    static function getComments($file) 
+    {
+        $code=file_get_contents($file);
+        $docComments = array_filter(token_get_all($code), function($entry)
+        {   
+            return $entry[0] == T_COMMENT;
+        });
+        if ($docComments)
+        {
+            $t=array_shift($docComments);
+            return $t[1];
+        }
+        else 
+            return null;
+    }
     static function process($wpdir)
     {
         $files=(getAllPhpFiles($wpdir));
@@ -76,8 +90,8 @@ class SinkInstaller extends PHPParser_NodeVisitorAbstract
             $filtered = $traverser->traverse($syntax_tree);
             if (self::$changed)
             {
-                #FIXME: preserve top of file comments, Wordpress can not function without them
-                $newCode = '<?php ' . $prettyPrinter->prettyPrint($filtered);
+                $comments=self::getComments($file);
+                $newCode = '<?php ' .$comments.PHP_EOL.$prettyPrinter->prettyPrint($filtered);
                 file_put_contents($file, $newCode);   
                 $changes[]=$file;
             }
@@ -86,4 +100,3 @@ class SinkInstaller extends PHPParser_NodeVisitorAbstract
         return $changes;
     }
 }
-
