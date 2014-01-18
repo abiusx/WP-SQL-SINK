@@ -5,17 +5,15 @@
  */
 
 
-global $inputs;
-$inputs=array();
+global $sqlsink_inputs;
+$sqlsink_inputs=array();
 foreach ($_GET as $k=>$v)
-	$inputs[0][$k]=$v;
+	$sqlsink_inputs[0][$k]=$v;
 foreach ($_GET as $k=>$v)
-	$inputs[1][$k]=$v;
-global $file;
-$file="/tmp/logs/sql";
-function store_data()
+	$sqlsink_inputs[1][$k]=$v;
+global $sqlsink_file;
+function sqlsink_get_filename($file)
 {
-	global $file;
 	$list=glob($file."*");
 	sort($list);
 
@@ -25,13 +23,13 @@ function store_data()
 	else
 		$number="0";
 	$number=str_pad($number+1, 3,"0",STR_PAD_LEFT);
-	rename($file.".txt", $file.$number.".txt");
+	return $file.$number.".txt";
 }
-register_shutdown_function("store_data");
-function dump_log($in,$out,$GET=true)
+$sqlsink_file=sqlsink_get_filename("/tmp/logs/sql");
+function sqlsink_dump_log($in,$out,$GET=true)
 {
-	global $file;
-	$f=$file.".txt";
+	global $sqlsink_file;
+	$f=$sqlsink_file.".txt";
 	if ($GET)
 		$GET="GET";
 	else
@@ -43,13 +41,13 @@ function dump_log($in,$out,$GET=true)
 }
 function sink_handler($query)
 {
-	global $inputs;
-	foreach ($inputs[0] as $input) //get
-		dump_log($input,$query);
-	foreach ($inputs[1] as $input) //post
-		dump_log($input,$query,false);
-	if (count($inputs[0])==0 and count($inputs[1])==0)
-		dump_log("",$query);
+	global $sqlsink_inputs;
+	foreach ($sqlsink_inputs[0] as $input) //get
+		sqlsink_dump_log($input,$query);
+	foreach ($sqlsink_inputs[1] as $input) //post
+		sqlsink_dump_log($input,$query,false);
+	if (count($sqlsink_inputs[0])==0 and count($sqlsink_inputs[1])==0)
+		sqlsink_dump_log("",$query);
 	//put your sink handling logic here
 }
 
@@ -113,25 +111,25 @@ function mysql_query_($query=null)
 	sink_handler($query);
 	return call_user_func_array("mysql_query", $args);
 }
-function mysqli_query_($link=null,$query=null);
+function mysqli_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
 	return call_user_func_array("mysql_query", $args);
 }
-function mysqli_real_query_($link=null,$query=null);
+function mysqli_real_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
 	return call_user_func_array("mysql_query", $args);
 }
-function mysqli_multi_query_($link=null,$query=null);
+function mysqli_multi_query_($link=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
 	return call_user_func_array("mysql_query", $args);
 }
-function mysql_db_query_($dbname=null,$query=null);
+function mysql_db_query_($dbname=null,$query=null)
 {
 	$args=func_get_args();
 	sink_handler($query);
