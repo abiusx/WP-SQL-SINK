@@ -9,7 +9,7 @@ global $sqlsink_inputs;
 $sqlsink_inputs=array();
 foreach ($_GET as $k=>$v)
 	$sqlsink_inputs[0][$k]=$v;
-foreach ($_GET as $k=>$v)
+foreach ($_POST as $k=>$v)
 	$sqlsink_inputs[1][$k]=$v;
 global $sqlsink_file;
 function sqlsink_get_filename($file)
@@ -29,7 +29,7 @@ $sqlsink_file=sqlsink_get_filename("/tmp/logs/sql");
 function sqlsink_dump_log($in,$out,$GET=true)
 {
 	global $sqlsink_file;
-	$f=$sqlsink_file.".txt";
+	$f=$sqlsink_file;
 	if ($GET)
 		$GET="GET";
 	else
@@ -43,9 +43,17 @@ function sink_handler($query)
 {
 	global $sqlsink_inputs;
 	foreach ($sqlsink_inputs[0] as $input) //get
-		sqlsink_dump_log($input,$query);
+		if (is_array($input))
+			foreach ($input as $in)
+				sqlsink_dump_log($in,$query);
+		else
+			sqlsink_dump_log($input,$query);
 	foreach ($sqlsink_inputs[1] as $input) //post
-		sqlsink_dump_log($input,$query,false);
+		if (is_array($input))
+			foreach ($input as $in)
+				sqlsink_dump_log($in,$query,false);
+		else
+			sqlsink_dump_log($input,$query,false);
 	if (count($sqlsink_inputs[0])==0 and count($sqlsink_inputs[1])==0)
 		sqlsink_dump_log("",$query);
 	//put your sink handling logic here
